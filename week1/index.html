@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>보충이다 보충!!</title>
+		<style>
+			.flex-container {
+				display: flex;
+				flex-wrap: nowrap;
+				flex-direction: column;
+				justify-content: center;
+				align-items: flex-start;
+				/* div에 width를 주고 margin:auto 시 가운데 정렬이된다. 왼쪽오른쪽margin을 동등하게 잡아주기 떄문.  */
+				width : 473px;
+				margin: auto;
+				/* ---------- */
+			}
+
+			.flex-container > .flex-board {
+				/*
+				display: flex;
+					display를 flex로 해버리면 글자 가운데 정렬이 안됨...
+					div 내부의 아이템을 flex형태로 만들어야지, 바깥 div까지 flex형태로 만들어선 안됨. 유의
+				*/
+				flex-wrap: nowrap;
+				flex-direction: column;
+				justify-content: center;
+				align-items: flex-start;
+				width: 100%;
+				text-align: center;
+			}
+
+			.flex-board > div > button {
+				background-color: #f1f1f1;
+				width: 70px;
+				margin: 10px;
+				text-align: center;
+				line-height: 55px;
+				font-size: 30px;
+				border-radius: 10%;
+			}
+			.button {
+				background-color: #ffc0cb;
+				border: none;
+				padding: 15px 32px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+				color: #9966CC;
+				margin: 4px 2px;
+				cursor: pointer;
+			}
+			#in {
+				display: inline-block;
+			}
+
+
+		</style>
+	</head>
+	<body>
+		<div class="flex-container">
+			<div class="flex-board" style="color: red; font-size: 30px; font-weight:bold">Catch Number</div>
+
+			<div class="flex-board" name="time">Time : 0초</div>
+			<div class="flex-board" name="nextnum">목표 숫자 : 0</div>
+
+			<div class="flex-board">
+				<div>
+					<button name="num" onclick="clickNum(this)">1</button>
+					<button name="num" onclick="clickNum(this)">2</button>
+					<button name="num" onclick="clickNum(this)">3</button>
+					<button name="num" onclick="clickNum(this)">4</button>
+					<button name="num" onclick="clickNum(this)">5</button>
+				</div>
+				<div>
+					<button name="num" onclick="clickNum(this)">6</button>
+					<button name="num" onclick="clickNum(this)">7</button>
+					<button name="num" onclick="clickNum(this)">8</button>
+					<button name="num" onclick="clickNum(this)">9</button>
+					<button name="num" onclick="clickNum(this)">10</button>
+				</div>
+				<div>
+					<button name="num" onclick="clickNum(this)">11</button>
+					<button name="num" onclick="clickNum(this)">12</button>
+					<button name="num" onclick="clickNum(this)">13</button>
+					<button name="num" onclick="clickNum(this)">14</button>
+					<button name="num" onclick="clickNum(this)">15</button>
+				</div>
+				<div>
+					<button name="num" onclick="clickNum(this)">16</button>
+					<button name="num" onclick="clickNum(this)">17</button>
+					<button name="num" onclick="clickNum(this)">18</button>
+					<button name="num" onclick="clickNum(this)">19</button>
+					<button name="num" onclick="clickNum(this)">20</button>
+				</div>
+				<div>
+					<button name="num" onclick="clickNum(this)">21</button>
+					<button name="num" onclick="clickNum(this)">22</button>
+					<button name="num" onclick="clickNum(this)">23</button>
+					<button name="num" onclick="clickNum(this)">24</button>
+					<button name="num" onclick="clickNum(this)">25</button>
+				</div>
+			</div>
+			<div class="flex-board" style="flex-direction: row;">
+				<button class="button" onclick="clickStart()">Start</button>
+				<button class="button" onclick="clickHint()">Hint</button>
+				<button class="button" onclick="clickReset()">Reset</button>
+			</div>
+		</div>
+		<script>
+
+			function shuffleArray(array) {
+				for (var i = array.length - 1; i > 0; i--) {
+					var j = Math.floor(Math.random() * (i + 1));
+					var temp = array[i];
+					array[i] = array[j];
+					array[j] = temp;
+				}
+			}
+
+			function clickNum(elem) {
+				if(elem.innerText == nextNum) {
+					elem.innerText = "　";
+					if(nextNum == 25) {
+						alert("Congratulations!")
+						clearGame();
+					} else {
+						nextNum = nextNum + 1;
+						document.getElementsByName("nextnum")[0].innerText = "목표 숫자 : "+nextNum.toString();
+					}
+				}
+			}
+
+			function clickStart() {
+				var tmp = Array.from(Array(25).keys());
+				var numlist = document.getElementsByName("num");
+				document.getElementsByName("time")[0].innerText = "Time : 0초";
+				document.getElementsByName("nextnum")[0].innerText = "목표 숫자 : 1";
+				time = 0;
+				nextNum = 1;
+				isHint = true;
+				isStart = true;
+				clearInterval(playAlert);
+				shuffleArray(tmp);
+				for(var i = 0; i<25;i++) {
+					numlist[i].innerText = tmp[i] + 1;
+				}
+				playAlert = setInterval(function() {
+					addTime();
+				}, 1000);
+			}
+
+			function clickHint() {
+				var numlist = document.getElementsByName("num");
+				var i = 0;
+				var count = 0;
+				if(nextNum <= 0 || nextNum > 25 || isHint == false || isStart == false) {
+					return 0;
+				}
+				isHint = false;
+				while(numlist[i].innerText != nextNum) {
+					i++;
+				}
+				var repeat = setInterval(function() {
+					if(numlist[i].style.backgroundColor == "") {
+						numlist[i].style.backgroundColor = "red";
+					} else {
+						numlist[i].style.backgroundColor = "";
+					}
+					count++;
+					if(count == 6 || isStart == false) {
+						numlist[i].style.backgroundColor = "";
+						clearInterval(repeat);
+					}
+				}, 1000);
+			}
+
+			function clickReset() {
+				var tmp = Array.from(Array(25).keys());
+				var numlist = document.getElementsByName("num");
+				isStart = false;
+				for(var i = 0; i<25;i++) {
+					numlist[i].innerText = tmp[i] + 1;
+				}
+				if(playAlert != null) {
+					clearInterval(playAlert);
+				}
+			}
+
+			function addTime() {
+				if(isStart == false) {
+					return 0;
+				}
+				time = time + 1;
+				document.getElementsByName("time")[0].innerText = "Time : " + time.toString() + "초";
+			}
+
+			function clearGame() {
+				location.href = "https://maplestory.nexon.com";
+			}
+
+			var tmp = Array.from(Array(25).keys());
+			var nextNum = 0;
+			var time = 0;
+			var playAlert = null;
+			var isHint = false;
+			var isStart = false;
+
+		</script>
+	</body>
+</html>

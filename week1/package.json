@@ -1,0 +1,15 @@
+{
+  "name": "week1",
+  "version": "1.0.0",
+  "description": "kweb week 1",
+  "main": "index.js",
+  "author": "hasu",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  },
+  "scripts": {
+  	"start" : "node index.js",
+  	"start:dev": "nodemon index.js"
+  }
+}
