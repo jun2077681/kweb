@@ -17,6 +17,13 @@ exports.div = function div(a,b) {
     return a / b;
 }
 
+exports.mod = function mod(a,b) {
+    if(b == 0) {
+        return new Error('zero divider error.');
+    }
+    return a % b;
+}
+
 exports.getE = function getE() {
     return Math.E;
 }
